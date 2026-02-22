@@ -22,3 +22,17 @@ class TestStore:
         with allure.step('Проверка статуса ответа и валидация JSON-схемы'):
             assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
             jsonschema.validate(response.json(), STORE_SCHEMA)
+
+
+    @allure.title('Получение информации о заказе по ID')
+    def test_get_info_of_order_by_id(self, create_order):
+        with allure.step('Получение ID созданного заказа'):
+            order_id = create_order['id']
+        with allure.step('Отправка запроса на получение инфо о заказе по ID'):
+            response = requests.get(f'{BASE_URL}/store/order/{order_id}')
+        with allure.step('Проверка статуса ответа'):
+            assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
+            assert response.json()['id'] == order_id
+
+
+
