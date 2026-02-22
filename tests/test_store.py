@@ -1,6 +1,7 @@
 import allure
 import jsonschema
 import requests
+import pytest
 
 from .schemas.store_schema import STORE_SCHEMA
 
@@ -56,6 +57,23 @@ class TestStore:
         with allure.step('Проверка статуса и текста ответа'):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
             assert response.text == "Order not found", "Текст ответа не совпал с ожидаемым"
+
+
+    @allure.title('Получение инвентаря магазина')
+    @pytest.mark.parametrize(
+        "status, quantity",
+        [
+            ("placed", int),
+            ("approved", int),
+            ("delivered", int)
+        ]
+    )
+    def test_get_store_inventory(self, status, quantity):
+        with allure.step(f'Отправка запроса на статус {status} получения инвентаря'):
+            response = requests.get(f'{BASE_URL}/store/inventory', params={'status': status})
+        with allure.step('Проверка статуса ответа и формата данных'):
+            assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
+            assert isinstance(response.json(), dict)
 
 
 
