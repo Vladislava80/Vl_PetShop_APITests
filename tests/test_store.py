@@ -55,7 +55,7 @@ class TestStore:
             response = requests.get(f'{BASE_URL}/store/order/9999')
         with allure.step('Проверка статуса и текста ответа'):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
-            assert response.text == "Order not found", "Код ответа не совпал с ожидаемым"
+            assert response.text == "Order not found", "Текст ответа не совпал с ожидаемым"
 
 
 
