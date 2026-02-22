@@ -35,4 +35,20 @@ class TestStore:
             assert response.json()['id'] == order_id
 
 
+    @allure.title('Удаление заказа по ID')
+    def test_delete_order_by_id(self, create_order):
+        with allure.step('Получение ID заказа'):
+            order_id = create_order['id']
+        with allure.step('Отправка запроса на удаление по ID'):
+            response = requests.delete(f'{BASE_URL}/store/order/{order_id}')
+        with allure.step('Проверка статуса ответа'):
+            assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
+        with allure.step('Отправка запроса на получение инфо об удаленном заказе'):
+            response = requests.get(f'{BASE_URL}/store/order/{order_id}')
+        with allure.step('Проверка статуса ответа'):
+            assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
+
+
+
+
 
