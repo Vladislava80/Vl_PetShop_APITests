@@ -4,6 +4,7 @@ import requests
 import pytest
 
 from .schemas.store_schema import STORE_SCHEMA
+from .schemas.store_schema import INVENTORY_SCHEMA
 
 BASE_URL = "http://5.181.109.28:9090/api/v3"
 
@@ -52,7 +53,7 @@ class TestStore:
 
     @allure.title('Попытка получить информацию о несуществующем заказе')
     def test_get_info_of_nonexistent_order(self):
-        with allure.step('Отправка запроса на поулчение инфо о несуществующем заказе'):
+        with allure.step('Отправка запроса на получение инфо о несуществующем заказе'):
             response = requests.get(f'{BASE_URL}/store/order/9999')
         with allure.step('Проверка статуса и текста ответа'):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
@@ -60,20 +61,17 @@ class TestStore:
 
 
     @allure.title('Получение инвентаря магазина')
-    @pytest.mark.parametrize(
-        "status, quantity",
-        [
-            ("placed", int),
-            ("approved", int),
-            ("delivered", int)
-        ]
-    )
-    def test_get_store_inventory(self, status, quantity):
-        with allure.step(f'Отправка запроса на статус {status} получения инвентаря'):
-            response = requests.get(f'{BASE_URL}/store/inventory', params={'status': status})
+    def test_get_store_inventory(self):
+        with allure.step(f'Отправка запроса на получения инвентаря'):
+            response = requests.get(f'{BASE_URL}/store/inventory')
         with allure.step('Проверка статуса ответа и формата данных'):
             assert response.status_code == 200, "Код ответа не совпал с ожидаемым"
-            assert isinstance(response.json(), dict)
+            jsonschema.validate(response.json(), INVENTORY_SCHEMA)
+
+
+
+
+
 
 
 

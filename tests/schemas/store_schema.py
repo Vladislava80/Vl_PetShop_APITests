@@ -20,3 +20,18 @@ STORE_SCHEMA = {
     "additionalProperties": True,
     "required": ["id", "petId", "quantity", "complete"]
 }
+
+
+INVENTORY_SCHEMA = {
+    "type": "object",
+    "properties":{
+        "approved": {
+            "type": "integer"},
+        "placed": {
+            "type": "integer"},
+        "delivered": {
+            "type": "integer"
+        }
+    },
+    "additionalProperties": False
+}
